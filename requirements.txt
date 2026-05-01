@@ -1,0 +1,32 @@
+# ── Data ─────────────────────────────────────────────────────────────────────
+# Python 3.13: pandas>=2.2.3 tem wheel pré-compilada
+yfinance>=0.2.40
+pandas>=2.2.3
+numpy>=1.26.4
+scikit-learn>=1.4.2
+
+# ── Deep Learning ─────────────────────────────────────────────────────────────
+# TensorFlow 2.21+ tem wheel oficial para Python 3.13 (Windows/Linux/Mac)
+tensorflow==2.21.0
+
+# ── API ───────────────────────────────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.1
+pydantic>=2.7.1
+
+# ── Monitoramento ─────────────────────────────────────────────────────────────
+psutil>=5.9.8
+prometheus-fastapi-instrumentator>=7.0.0
+
+# ── Utilitários ───────────────────────────────────────────────────────────────
+python-dotenv>=1.0.1
+joblib>=1.4.2
+matplotlib>=3.9.0
+seaborn>=0.13.2
+jupyter>=1.0.0
+ipykernel>=6.29.4
+
+# ── Testes ────────────────────────────────────────────────────────────────────
+pytest>=9.0.0
+pytest-cov>=7.0.0
+httpx>=0.27.0

@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Cobertura de testes
+coverage_report/
+.coverage
+.pytest_cache/
+
+# Dados brutos e gráficos (gerados automaticamente pelo train.py)
+data/*.csv
+data/*.png
+
+# Arquivos grandes de modelo (descomente se quiser excluir do repo)
+# model/*.keras
+# model/*.pkl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
