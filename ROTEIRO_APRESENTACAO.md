@@ -1,190 +1,318 @@
-# Roteiro de Apresentação — Tech Challenge Fase 4
-# PETR4.SA LSTM Stock Price Predictor
-# Tempo estimado: 8 a 12 minutos
+# ROTEIRO DE APRESENTAÇÃO — Tech Challenge Fase 4
+# LSTM Stock Price Predictor — PETR4.SA
+# Tempo estimado: 8 a 10 minutos
+# ============================================================
+# INSTRUÇÕES: As falas estão entre aspas. Siga as ações
+# indicadas entre colchetes [ ] durante a gravação.
+# ============================================================
 
----
 
-## ▶ PARTE 1 — INTRODUÇÃO (1 min)
-> Câmera ou slide de capa
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 1 — CAPA
+[ Mostre o slide de capa ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-"Olá! Meu nome é Rafael, e essa é a apresentação do Tech Challenge da Fase 4
-do curso de Machine Learning Engineering da POSTECH.
+"Olá! Meu nome é Rafael Buzato, e essa é a apresentação do
+Tech Challenge da Fase 4 do curso de Machine Learning Engineering
+da POSTECH.
 
-O desafio proposto foi desenvolver um modelo de redes neurais LSTM —
-Long Short-Term Memory — para prever o preço de fechamento de ações
-da bolsa de valores, e realizar toda a pipeline de desenvolvimento,
-desde a coleta dos dados até o deploy do modelo em uma API em produção.
+O objetivo desse projeto foi desenvolver um modelo preditivo de
+redes neurais LSTM — Long Short-Term Memory — para prever o preço
+de fechamento de ações da bolsa de valores, e realizar a pipeline
+completa de desenvolvimento: desde a coleta dos dados históricos
+até o deploy do modelo em uma API RESTful em produção.
 
-Para isso, escolhi trabalhar com as ações da Petrobras, o ticker PETR4.SA,
-utilizando dados históricos de janeiro de 2018 até dezembro de 2024,
-totalizando 1.738 registros de pregões."
+Para esse desafio, escolhi trabalhar com as ações da Petrobras,
+o ticker PETR4.SA."
 
----
 
-## ▶ PARTE 2 — ARQUITETURA DO PROJETO (1-2 min)
-> Mostre a pasta do projeto aberta no VS Code
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 2 — O DESAFIO
+[ Avance para o slide 2 ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-"Antes de entrar no código, deixa eu mostrar como o projeto está organizado.
+"O projeto seguiu cinco requisitos principais definidos no enunciado.
 
-Temos cinco grandes blocos:
+O primeiro foi a coleta e o pré-processamento dos dados. Para isso,
+utilizei a biblioteca yfinance para baixar automaticamente os dados
+históricos da PETR4.SA, cobrindo o período de janeiro de 2018 até
+dezembro de 2024 — totalizando 1.738 pregões registrados.
 
-O primeiro é a pasta 'model', que contém o script de treinamento,
-o modelo LSTM salvo após o treino, e o scaler que normaliza os dados.
+O segundo foi o desenvolvimento do modelo LSTM, incluindo a
+construção da rede neural, o treinamento e a avaliação com métricas
+como MAE, RMSE e MAPE.
 
-O segundo é a pasta 'api', que contém a API RESTful construída com FastAPI,
-com os endpoints de previsão, saúde e métricas.
+O terceiro foi o salvamento e exportação do modelo treinado, para
+que ele pudesse ser carregado pela API em tempo de inferência.
 
-O terceiro é a pasta 'monitoring', com o middleware que registra logs
-de cada requisição e coleta métricas de uso como CPU e memória.
-Também tem a configuração do Prometheus para monitoramento em produção.
+O quarto foi o deploy do modelo em uma API RESTful, construída com
+FastAPI, permitindo que qualquer sistema envie dados históricos e
+receba previsões de preços futuros.
 
-O quarto é a pasta 'tests', com 66 testes automatizados cobrindo
-pré-processamento, modelo e todos os endpoints da API.
+E o quinto foi a escalabilidade e o monitoramento, com rastreamento
+de performance em produção, incluindo tempo de resposta e utilização
+de recursos."
 
-E por fim, temos o Dockerfile e o docker-compose.yml,
-que permitem subir toda a infraestrutura com um único comando."
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 3 — ARQUITETURA DO PROJETO
+[ Avance para o slide 3 ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## ▶ PARTE 3 — O MODELO LSTM (2 min)
-> Mostre o arquivo model/train.py ou o notebook
+"Antes de entrar nos detalhes técnicos, deixa eu mostrar como o
+projeto está organizado.
 
-"Vamos falar sobre o modelo.
+A pasta 'model' contém o script de treinamento do LSTM, o modelo
+salvo após o treino e o scaler responsável pela normalização dos dados.
 
-LSTM é um tipo especial de rede neural recorrente, muito eficiente
-para dados sequenciais e séries temporais — como é o caso de preços de ações,
-onde o valor de hoje depende dos valores anteriores.
+A pasta 'api' contém toda a lógica da API RESTful construída com
+FastAPI, incluindo os endpoints e os schemas de validação com Pydantic.
 
-O modelo foi construído com a seguinte arquitetura:
+A pasta 'monitoring' contém um middleware customizado que registra
+logs de cada requisição e coleta métricas de uso em tempo real,
+como CPU e memória. Também inclui a configuração do Prometheus para
+integração com dashboards Grafana em produção.
+
+A pasta 'tests' contém 66 testes automatizados, cobrindo o
+pré-processamento dos dados, o comportamento do modelo e todos os
+endpoints da API.
+
+E por fim, temos o Dockerfile e o docker-compose.yml, que permitem
+subir toda a infraestrutura da aplicação com um único comando,
+incluindo a API, o Prometheus e o Grafana."
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 4 — MODELO LSTM — ARQUITETURA
+[ Avance para o slide 4 ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"Vamos agora falar sobre o coração do projeto: o modelo LSTM.
+
+LSTM é um tipo especial de rede neural recorrente. Ao contrário das
+redes tradicionais, o LSTM tem memória — ele consegue aprender
+dependências de longo prazo em sequências de dados. Isso o torna
+ideal para séries temporais financeiras, onde o preço de hoje
+depende do comportamento dos dias anteriores.
+
+Para o pré-processamento, os dados de fechamento foram normalizados
+com MinMaxScaler entre 0 e 1, e organizados em janelas de 60 dias.
+Ou seja: para cada previsão, o modelo recebe os últimos 60 pregões
+como entrada e retorna o próximo preço de fechamento previsto.
+
+A arquitetura do modelo foi construída em camadas:
 Começamos com uma camada LSTM de 128 unidades com retorno de sequência,
-seguida de um Dropout de 20% para evitar overfitting.
+seguida de um Dropout de 20% para reduzir overfitting.
 Depois, uma segunda camada LSTM de 64 unidades,
 mais um Dropout de 20%,
 uma camada Dense com 32 neurônios e ativação ReLU,
-e a camada de saída com 1 neurônio — o preço previsto.
+e a camada de saída com um único neurônio — o preço previsto.
 
-Para treinar, usamos os dados normalizados com MinMaxScaler,
-com janelas de 60 dias como entrada — ou seja, o modelo olha
-para os últimos 60 pregões para prever o próximo.
+O dataset foi dividido em 80% para treino e 20% para teste.
+Utilizamos o otimizador Adam com função de perda MSE, e o
+EarlyStopping com paciência de 10 épocas para evitar overfitting.
+O modelo convergiu em apenas 42 épocas."
 
-O conjunto foi dividido em 80% para treino e 20% para teste.
-Usamos EarlyStopping, e o modelo convergiu em apenas 42 épocas.
 
-Os resultados foram excelentes:
-- MAE de 0.031
-- RMSE de 0.036
-- e um MAPE de apenas 3.62% —
-  isso significa que o modelo erra em média menos de 4% do preço real.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 5 — RESULTADOS DO MODELO
+[ Avance para o slide 5 ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[MOSTRAR O GRÁFICO data/prediction_plot.png]
+"Os resultados do modelo no conjunto de teste foram muito
+satisfatórios.
 
-Aqui podemos ver o gráfico com os valores reais em azul
-e os valores previstos em laranja tracejado.
-O modelo acompanha muito bem a tendência dos preços."
+O MAE — Mean Absolute Error — foi de 0.031, indicando um erro
+absoluto médio muito baixo nas previsões normalizadas.
 
----
+O RMSE — Root Mean Square Error — foi de 0.036, penalizando
+mais os erros maiores, e ainda assim mantendo um valor excelente.
 
-## ▶ PARTE 4 — DEMO DA API LOCAL (2 min)
-> Abra http://localhost:8000/docs no navegador
+E a métrica mais importante para a interpretação de negócio:
+o MAPE — Erro Percentual Absoluto Médio — foi de apenas 3.62%.
 
-"Agora vou mostrar a API funcionando localmente.
+Isso significa que, em média, o modelo erra menos de 4% do preço
+real da ação. Para séries temporais financeiras, que são altamente
+voláteis e influenciadas por fatores externos, um erro abaixo de 5%
+já é considerado um resultado muito bom.
 
-A API foi desenvolvida com FastAPI, que gera automaticamente
-essa documentação interativa que vocês estão vendo — o Swagger UI.
+O modelo foi avaliado sobre 348 amostras do conjunto de teste,
+representando os 20% finais da série histórica."
 
-Temos quatro endpoints principais:
 
-[CLIQUE EM GET /health → Try it out → Execute]
-Primeiro o endpoint de saúde. Ele confirma que o modelo está carregado
-e qual ticker está sendo servido.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 6 — API RESTFUL — FASTAPI
+[ Avance para o slide 6 ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[CLIQUE EM GET /metrics-summary → Try it out → Execute]
-Aqui temos as métricas em tempo real: tempo de atividade da API,
-total de requisições processadas, tempo médio de resposta,
-percentual de CPU e uso de memória RAM.
+"Após o treinamento, o modelo foi salvo em formato .keras e o
+scaler em formato .pkl, para serem carregados pela API no momento
+da inicialização.
 
-[CLIQUE EM POST /predict → Try it out]
-E agora o endpoint mais importante — o de previsão.
+A API foi desenvolvida com FastAPI, e possui cinco endpoints:
 
-Vou passar os últimos 60 preços reais de fechamento da PETR4
-e pedir a previsão para os próximos 5 dias úteis.
+O GET /health verifica se o modelo está carregado e retorna o
+status da aplicação — essencial para healthchecks em produção.
 
-[COLE O PAYLOAD E CLIQUE EM EXECUTE]
+O POST /predict é o endpoint principal. O usuário envia uma lista
+com pelo menos 60 preços históricos de fechamento e especifica
+quantos dias futuros deseja prever, de 1 a 30. A API retorna as
+previsões desnormalizadas em reais, o ticker e a versão do modelo.
 
-Vejam a resposta: o modelo retornou as previsões para os próximos 5 dias,
-em reais, junto com o ticker, o número de dias previstos
-e a versão do modelo."
+O GET /metrics-summary retorna métricas de uso em tempo real:
+uptime, total de requisições, tempo médio de resposta, uso de CPU
+e memória RAM.
 
----
+O GET /metrics expõe as métricas no formato Prometheus, para
+integração com ferramentas de observabilidade.
 
-## ▶ PARTE 5 — DEMO DA API EM PRODUÇÃO (1 min)
-> Abra a URL do Railway no navegador
+E o GET /docs exibe a documentação interativa Swagger UI,
+gerada automaticamente pelo FastAPI."
 
-"Além de funcionar localmente, a API está deployada em produção
-na plataforma Railway, usando o Docker que configuramos.
 
-[ACESSE A URL DO RAILWAY /docs]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 7 — DEMO DA API
+[ Abra o navegador em http://localhost:8000/docs ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Aqui está a mesma API rodando em nuvem, com a mesma documentação.
-Vou repetir a chamada de previsão para demonstrar que funciona
-em ambiente de produção.
+"Agora vamos ver a API funcionando na prática.
 
-[REPITA O POST /predict]
+[ Clique em GET /health → Try it out → Execute ]
 
-Perfeito — mesmos resultados, rodando em produção."
+Aqui temos o endpoint de saúde. O retorno confirma que o modelo
+está carregado, o status é 'ok' e o ticker é PETR4.SA.
 
----
+[ Clique em GET /metrics-summary → Try it out → Execute ]
 
-## ▶ PARTE 6 — TESTES AUTOMATIZADOS (1 min)
-> Abra o terminal do VS Code
+Agora as métricas de monitoramento. Podemos ver o tempo de
+atividade da API, o total de requisições que foram processadas,
+o tempo médio de resposta em milissegundos, o percentual de CPU
+e o uso de memória RAM em tempo real.
 
-"Para garantir a qualidade do projeto, implementamos 66 testes automatizados
-organizados em três arquivos:
+Esse é o requisito de escalabilidade e monitoramento do projeto:
+rastrear a performance do modelo em produção.
 
-'test_preprocessing.py' testa toda a lógica de normalização dos dados,
-geração das sequências e validação das métricas.
+[ Clique em POST /predict → Try it out ]
 
-'test_model.py' testa a inferência do modelo, o reshape dos inputs
-e a persistência do scaler em disco.
+E agora o endpoint de previsão. Vou inserir os últimos 60 preços
+reais de fechamento da PETR4 e solicitar a previsão para os
+próximos 5 dias úteis.
 
-'test_api.py' testa todos os endpoints — respostas corretas,
-validações de entrada e comportamento quando o modelo não está carregado.
+[ Cole o payload e clique em Execute ]
 
-[RODE: python -m pytest]
+Vejam o resultado: o modelo retornou as previsões dos próximos
+5 dias em reais, junto com o ticker, o número de dias previstos
+e a versão do modelo em produção.
 
-Todos os 66 testes passando. A cobertura de código é de 97%
-nos módulos da API e 100% no middleware de monitoramento."
+Esse é exatamente o comportamento esperado pelo projeto: o usuário
+fornece dados históricos e recebe previsões de preços futuros."
 
----
 
-## ▶ PARTE 7 — ENCERRAMENTO (30 seg)
-> Câmera ou slide final
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 8 — TESTES AUTOMATIZADOS
+[ Avance para o slide 8 — depois abra o terminal do VS Code ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-"Para resumir, nesse projeto desenvolvemos:
-uma coleta e pré-processamento automatizado dos dados da PETR4,
-um modelo LSTM com MAPE de 3.62%,
-uma API RESTful com FastAPI com endpoints de previsão e monitoramento,
-testes automatizados com 97% de cobertura,
-e deploy em produção com Docker e Railway.
+"Para garantir a qualidade e a confiabilidade do projeto,
+implementamos 66 testes automatizados com pytest, organizados
+em três arquivos.
+
+O test_preprocessing.py testa toda a lógica de pré-processamento:
+a normalização MinMax, a geração das sequências de 60 dias,
+a divisão dos dados sem vazamento entre treino e teste,
+e o cálculo correto das métricas MAE, RMSE e MAPE.
+
+O test_model.py testa o comportamento do modelo: a inferência com
+inputs corretos, o reshape dos dados para o formato 3D esperado
+pelo LSTM, e a persistência do scaler em disco com joblib.
+
+E o test_api.py testa todos os endpoints da API: respostas com
+status correto, validação de payloads inválidos com erro 422,
+comportamento quando o modelo não está carregado com erro 503,
+e incremento correto das métricas de monitoramento.
+
+[ Execute no terminal: python -m pytest ]
+
+Vejam: todos os 66 testes passando. A cobertura de código é de
+97% na API, 100% nos schemas e 100% no middleware de monitoramento."
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 9 — DEPLOY E MONITORAMENTO
+[ Avance para o slide 9 — depois abra a URL do Railway ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"Falando sobre o deploy, toda a aplicação foi containerizada com
+Docker. O Dockerfile define a imagem da API, e o docker-compose.yml
+orquestra três serviços: a API, o Prometheus para coleta de métricas
+e o Grafana para dashboards visuais.
+
+Para o deploy em produção, utilizei a plataforma Railway, que
+detectou automaticamente o Dockerfile e realizou o build da imagem.
+A configuração suporta reinicialização automática em caso de falha
+e uso de variável de porta dinâmica.
+
+[ Abra a URL do Railway /docs ]
+
+E aqui está a mesma API rodando em produção, na nuvem.
+
+[ Repita o POST /predict ]
+
+O modelo recebe os dados, processa e retorna as previsões —
+com o mesmo comportamento do ambiente local, mas disponível
+publicamente na internet.
+
+O monitoramento em produção registra logs estruturados de cada
+requisição, com método, rota, status e tempo de resposta.
+Esses dados são expostos para o Prometheus e podem ser visualizados
+no Grafana com dashboards em tempo real."
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SLIDE 10 — ENCERRAMENTO
+[ Avance para o slide final ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"Para fechar, vou resumir o que foi desenvolvido nesse projeto.
+
+Realizamos a coleta e o pré-processamento automatizado de 1.738
+pregões da PETR4.SA usando yfinance.
+
+Desenvolvemos um modelo LSTM que alcançou um MAPE de 3.62%,
+errando em média menos de 4% do preço real da ação.
+
+Construímos uma API RESTful com FastAPI, com endpoints de previsão,
+monitoramento e documentação automática via Swagger.
+
+Implementamos 66 testes automatizados com 97% de cobertura de código,
+garantindo a qualidade e a confiabilidade de toda a pipeline.
+
+Containerizamos a aplicação com Docker e realizamos o deploy em
+produção na plataforma Railway.
+
+E configuramos o monitoramento completo com middleware de logs,
+métricas em tempo real e integração com Prometheus e Grafana.
 
 O código completo está disponível no GitHub em:
 github.com/rafaelbuzato/TechChallengeV4
 
+E a API está em produção e acessível pelo link do Railway.
+
 Obrigado!"
 
----
 
-## 📋 PAYLOAD PARA USAR NO DEMO
-Cole isso no corpo do POST /predict:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PAYLOAD PARA USAR NO DEMO AO VIVO (POST /predict)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {
   "prices": [
-    30.77, 31.14, 31.06, 31.5, 30.87, 30.55, 30.91, 30.88, 30.96, 30.7,
+    30.77, 31.14, 31.06, 31.5,  30.87, 30.55, 30.91, 30.88, 30.96, 30.7,
     30.55, 30.32, 30.23, 29.76, 29.64, 29.27, 29.47, 29.68, 29.63, 29.56,
-    29.43, 29.48, 29.08, 29.14, 29.05, 29.06, 29.15, 29.7, 29.76, 30.32,
+    29.43, 29.48, 29.08, 29.14, 29.05, 29.06, 29.15, 29.7,  29.76, 30.32,
     30.27, 30.59, 31.36, 31.03, 31.12, 32.36, 32.16, 32.12, 32.01, 31.68,
     31.93, 32.14, 32.43, 32.22, 32.54, 32.04, 32.87, 32.99, 33.32, 32.72,
-    32.52, 32.38, 32.69, 31.85, 31.72, 31.45, 31.46, 31.7, 31.6, 32.07
+    32.52, 32.38, 32.69, 31.85, 31.72, 31.45, 31.46, 31.7,  31.6,  32.07
   ],
   "days_ahead": 5
 }
