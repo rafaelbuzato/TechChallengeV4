@@ -39,15 +39,19 @@ class MetricsResponse(BaseModel):
 
 
 class ModelMetricsResponse(BaseModel):
-    ticker: str
-    mae: float
-    rmse: float
-    mape: float
-    epochs_executed: int
-    train_samples: int
-    test_samples: int
-    sequence_length: int
-    train_period: str
-    total_records: int
-    trained_at: str
-    model_version: str
+    ticker: str = Field(..., description="Ativo financeiro utilizado no treinamento.")
+    model_version: str = Field(..., description="Versão do modelo treinado.")
+    trained_at: str = Field(..., description="Data e hora em que o modelo foi treinado.")
+    train_period: str = Field(..., description="Período histórico utilizado no treinamento.")
+    architecture: str = Field(..., description="Arquitetura das camadas da rede neural.")
+    optimizer: str = Field(..., description="Algoritmo de otimização utilizado.")
+    loss_function: str = Field(..., description="Função de perda utilizada no treinamento.")
+    total_records: int = Field(..., description="Total de pregões baixados do Yahoo Finance.")
+    train_samples: int = Field(..., description="Quantidade de amostras usadas no treino.")
+    test_samples: int = Field(..., description="Quantidade de amostras usadas na avaliação.")
+    sequence_length: int = Field(..., description="Janela de dias usada como entrada do modelo.")
+    epochs_executed: int = Field(..., description="Número de épocas até o early stopping.")
+    mae: float = Field(..., description="Mean Absolute Error na escala normalizada (0–1).")
+    rmse: float = Field(..., description="Root Mean Squared Error na escala normalizada (0–1).")
+    mape: float = Field(..., description="Mean Absolute Percentage Error em % (quanto menor, melhor).")
+    mape_rating: str = Field(..., description="Avaliação qualitativa da performance do modelo.")

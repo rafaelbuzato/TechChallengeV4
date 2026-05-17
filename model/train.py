@@ -138,20 +138,35 @@ def main():
 
     plot_results(y_test, y_pred.flatten(), scaler)
 
+    # Determinar avaliação qualitativa do MAPE
+    mape_val = round(float(metrics["mape"]), 2)
+    if mape_val < 3:
+        mape_rating = "Ótimo — erro médio abaixo de 3%"
+    elif mape_val < 5:
+        mape_rating = "Excelente — erro médio abaixo de 5%"
+    elif mape_val < 10:
+        mape_rating = "Bom — erro médio abaixo de 10%"
+    else:
+        mape_rating = "Regular — erro médio acima de 10%"
+
     # Salvar métricas em JSON para o endpoint /model-metrics
     metrics_payload = {
         "ticker":           TICKER,
-        "mae":              round(float(metrics["mae"]),  4),
-        "rmse":             round(float(metrics["rmse"]), 4),
-        "mape":             round(float(metrics["mape"]), 2),
-        "epochs_executed":  len(history.history["loss"]),
+        "model_version":    "1.0.0",
+        "trained_at":       datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "train_period":     f"{datetime.strptime(START_DATE, '%Y-%m-%d').strftime('%d/%m/%Y')} a {datetime.strptime(END_DATE, '%Y-%m-%d').strftime('%d/%m/%Y')}",
+        "architecture":     "LSTM(128) → Dropout(20%) → LSTM(64) → Dropout(20%) → Dense(32, relu) → Dense(1)",
+        "optimizer":        "Adam",
+        "loss_function":    "Mean Squared Error",
+        "total_records":    len(df),
         "train_samples":    int(X_train.shape[0]),
         "test_samples":     int(X_test.shape[0]),
         "sequence_length":  SEQUENCE_LENGTH,
-        "train_period":     f"{START_DATE} a {END_DATE}",
-        "total_records":    len(df),
-        "trained_at":       datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "model_version":    "1.0.0",
+        "epochs_executed":  len(history.history["loss"]),
+        "mae":              round(float(metrics["mae"]),  4),
+        "rmse":             round(float(metrics["rmse"]), 4),
+        "mape":             mape_val,
+        "mape_rating":      mape_rating,
     }
     with open(METRICS_PATH, "w", encoding="utf-8") as f:
         json.dump(metrics_payload, f, indent=2, ensure_ascii=False)

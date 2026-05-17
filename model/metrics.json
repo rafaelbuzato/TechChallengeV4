@@ -1,14 +1,18 @@
 {
   "ticker": "PETR4.SA",
-  "mae": 0.0309,
-  "rmse": 0.0356,
-  "mape": 3.62,
-  "epochs_executed": 42,
+  "model_version": "1.0.0",
+  "trained_at": "2026-05-17 17:00:00",
+  "train_period": "01/01/2018 a 31/12/2024",
+  "architecture": "LSTM(128) → Dropout(20%) → LSTM(64) → Dropout(20%) → Dense(32, relu) → Dense(1)",
+  "optimizer": "Adam",
+  "loss_function": "Mean Squared Error",
+  "total_records": 1738,
   "train_samples": 1330,
   "test_samples": 348,
   "sequence_length": 60,
-  "train_period": "2018-01-01 a 2024-12-31",
-  "total_records": 1738,
-  "trained_at": "2026-05-17 17:00:00",
-  "model_version": "1.0.0"
+  "epochs_executed": 42,
+  "mae": 0.0309,
+  "rmse": 0.0356,
+  "mape": 3.62,
+  "mape_rating": "Excelente — erro médio abaixo de 5%"
 }
