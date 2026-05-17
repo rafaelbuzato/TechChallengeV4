@@ -120,6 +120,15 @@ BLOCO 5 — DEMO DA API LOCAL  (1 min 30 seg)
 
 O /health confirma que o modelo está carregado e a API está ativa.
 
+[ GET /model-metrics → Try it out → Execute ]
+
+Aqui está o endpoint /model-metrics — ele expõe os resultados
+reais do treinamento direto da API. Vejam: MAE de 0.031,
+RMSE de 0.036, e MAPE de 3.62% — o modelo erra em média
+menos de 4% do preço real da ação. Também mostra quantas
+amostras foram usadas no treino e teste, o período histórico
+e a data em que o modelo foi treinado.
+
 [ GET /metrics-summary → Try it out → Execute ]
 
 O /metrics-summary é o monitoramento em tempo real: uptime,
@@ -147,8 +156,14 @@ BLOCO 6 — API EM PRODUÇÃO  (45 segundos)
 
 [ Mostre a URL no navegador ]
 
-Aqui está rodando na nuvem. Vou repetir o /predict para mostrar
-que funciona em produção da mesma forma.
+Aqui está rodando na nuvem. Vou mostrar primeiro o /model-metrics
+em produção para confirmar que os resultados do modelo estão
+acessíveis também na nuvem.
+
+[ GET /model-metrics → Try it out → Execute ]
+
+Perfeito — mesmos resultados: MAPE 3.62%, 42 épocas, 1.738
+registros históricos. Agora o /predict em produção:
 
 [ POST /predict → cole o payload → Execute ]
 
@@ -170,6 +185,7 @@ ENCERRAMENTO  (30 segundos)
 Coletamos 1.738 pregões da PETR4 com yfinance,
 treinamos um LSTM que alcançou MAPE de 3.62%,
 salvamos o modelo e buildamos uma API com FastAPI,
+com endpoints de previsão, métricas do modelo e monitoramento,
 garantimos a qualidade com 66 testes automatizados,
 e fizemos o deploy com Docker no Railway.
 
@@ -186,6 +202,7 @@ CHECKLIST — ANTES DE GRAVAR
   [ ] API local rodando:  uvicorn api.main:app --reload
   [ ] Aba 1 no navegador: http://localhost:8000/docs
   [ ] Aba 2 no navegador: https://techchallengev4-production.up.railway.app/docs
+  [ ] Endpoint /model-metrics funcionando local e em produção
   [ ] VS Code com model/train.py aberto
   [ ] VS Code com api/main.py aberto em outra aba
   [ ] VS Code com monitoring/middleware.py aberto em outra aba
