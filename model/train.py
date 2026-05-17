@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import joblib
+import json
+from datetime import datetime
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
@@ -27,9 +29,10 @@ SEQUENCE_LENGTH = 60       # janela de dias usada como entrada
 TRAIN_RATIO = 0.8
 EPOCHS = 100
 BATCH_SIZE = 32
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "lstm_model.keras")
-SCALER_PATH = os.path.join(os.path.dirname(__file__), "scaler.pkl")
-DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "petr4_raw.csv")
+MODEL_PATH   = os.path.join(os.path.dirname(__file__), "lstm_model.keras")
+SCALER_PATH  = os.path.join(os.path.dirname(__file__), "scaler.pkl")
+METRICS_PATH = os.path.join(os.path.dirname(__file__), "metrics.json")
+DATA_PATH    = os.path.join(os.path.dirname(__file__), "..", "data", "petr4_raw.csv")
 
 
 def download_data() -> pd.DataFrame:
@@ -134,6 +137,25 @@ def main():
     metrics = evaluate(y_test, y_pred.flatten())
 
     plot_results(y_test, y_pred.flatten(), scaler)
+
+    # Salvar métricas em JSON para o endpoint /model-metrics
+    metrics_payload = {
+        "ticker":           TICKER,
+        "mae":              round(float(metrics["mae"]),  4),
+        "rmse":             round(float(metrics["rmse"]), 4),
+        "mape":             round(float(metrics["mape"]), 2),
+        "epochs_executed":  len(history.history["loss"]),
+        "train_samples":    int(X_train.shape[0]),
+        "test_samples":     int(X_test.shape[0]),
+        "sequence_length":  SEQUENCE_LENGTH,
+        "train_period":     f"{START_DATE} a {END_DATE}",
+        "total_records":    len(df),
+        "trained_at":       datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "model_version":    "1.0.0",
+    }
+    with open(METRICS_PATH, "w", encoding="utf-8") as f:
+        json.dump(metrics_payload, f, indent=2, ensure_ascii=False)
+    print(f"Métricas salvas em {METRICS_PATH}")
 
     print(f"\nModelo salvo em {MODEL_PATH}")
     return metrics

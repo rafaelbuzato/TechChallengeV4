@@ -36,3 +36,18 @@ class MetricsResponse(BaseModel):
     avg_response_time_ms: float
     cpu_percent: float
     memory_mb: float
+
+
+class ModelMetricsResponse(BaseModel):
+    ticker: str
+    mae: float
+    rmse: float
+    mape: float
+    epochs_executed: int
+    train_samples: int
+    test_samples: int
+    sequence_length: int
+    train_period: str
+    total_records: int
+    trained_at: str
+    model_version: str

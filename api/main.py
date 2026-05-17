@@ -1,4 +1,5 @@
 import os
+import json
 import time
 import numpy as np
 import joblib
@@ -10,11 +11,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from api.schemas import PredictRequest, PredictResponse, HealthResponse, MetricsResponse
+from api.schemas import PredictRequest, PredictResponse, HealthResponse, MetricsResponse, ModelMetricsResponse
 from monitoring.middleware import MonitoringMiddleware, get_metrics
 
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "model", "lstm_model.keras")
-SCALER_PATH = os.path.join(os.path.dirname(__file__), "..", "model", "scaler.pkl")
+MODEL_PATH   = os.path.join(os.path.dirname(__file__), "..", "model", "lstm_model.keras")
+SCALER_PATH  = os.path.join(os.path.dirname(__file__), "..", "model", "scaler.pkl")
+METRICS_PATH = os.path.join(os.path.dirname(__file__), "..", "model", "metrics.json")
 TICKER = "PETR4.SA"
 MODEL_VERSION = "1.0.0"
 SEQUENCE_LENGTH = 60
@@ -71,6 +73,18 @@ def health():
 @app.get("/metrics-summary", response_model=MetricsResponse, tags=["Monitoring"])
 def metrics_summary():
     return get_metrics()
+
+
+@app.get("/model-metrics", response_model=ModelMetricsResponse, tags=["Model"])
+def model_metrics():
+    if not os.path.exists(METRICS_PATH):
+        raise HTTPException(
+            status_code=404,
+            detail="Arquivo de métricas não encontrado. Execute o treinamento primeiro.",
+        )
+    with open(METRICS_PATH, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return ModelMetricsResponse(**data)
 
 
 @app.post("/predict", response_model=PredictResponse, tags=["Prediction"])
