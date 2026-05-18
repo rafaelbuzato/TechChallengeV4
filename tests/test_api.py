@@ -61,6 +61,8 @@ class TestPredictEndpoint:
         assert "predictions" in data
         assert "days_ahead" in data
         assert "model_version" in data
+        assert "reference_price" in data
+        assert "trend" in data
 
     def test_ticker_petr4_na_resposta(self, api_client):
         payload = {"prices": _prices(60), "days_ahead": 1}
@@ -79,14 +81,25 @@ class TestPredictEndpoint:
         payload = {"prices": _prices(60), "days_ahead": 3}
         data = api_client.post("/predict", json=payload).json()
         for p in data["predictions"]:
-            assert isinstance(p, float), f"Previsão deve ser float, obtido {type(p)}"
+            assert isinstance(p["price"], float), f"Previsão deve ser float, obtido {type(p['price'])}"
+
+    def test_estrutura_de_cada_previsao(self, api_client):
+        payload = {"prices": _prices(60), "days_ahead": 2}
+        data = api_client.post("/predict", json=payload).json()
+        for p in data["predictions"]:
+            assert "day" in p
+            assert "label" in p
+            assert "price" in p
+            assert "change_pct" in p
+            assert "direction" in p
+            assert p["direction"] in ("Alta", "Baixa", "Estável")
 
     def test_previsoes_em_range_plausivel(self, api_client):
         """Preços da PETR4 devem estar entre R$1 e R$200 num cenário normal."""
         payload = {"prices": _prices(90), "days_ahead": 5}
         data = api_client.post("/predict", json=payload).json()
         for p in data["predictions"]:
-            assert 1.0 <= p <= 200.0, f"Preço fora do range plausível: {p}"
+            assert 1.0 <= p["price"] <= 200.0, f"Preço fora do range plausível: {p['price']}"
 
     def test_aceita_mais_de_60_precos(self, api_client):
         payload = {"prices": _prices(120), "days_ahead": 1}
