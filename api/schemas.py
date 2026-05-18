@@ -24,11 +24,21 @@ class PredictRequest(BaseModel):
     )
 
 
+class DayPrediction(BaseModel):
+    day: int = Field(..., description="Número do dia previsto.")
+    label: str = Field(..., description="Rótulo do dia (ex: Dia 1, Dia 2...).")
+    price: float = Field(..., description="Preço de fechamento previsto em R$.")
+    change_pct: float = Field(..., description="Variação percentual em relação ao dia anterior (ou preço de referência no Dia 1).")
+    direction: str = Field(..., description="Direção da variação: Alta, Baixa ou Estável.")
+
+
 class PredictResponse(BaseModel):
-    ticker: str
-    predictions: List[float]
-    days_ahead: int
-    model_version: str
+    ticker: str = Field(..., description="Ativo financeiro previsto.")
+    model_version: str = Field(..., description="Versão do modelo utilizado.")
+    days_ahead: int = Field(..., description="Quantidade de dias previstos.")
+    reference_price: float = Field(..., description="Último preço histórico informado (base para cálculo das variações).")
+    trend: str = Field(..., description="Tendência geral do período: Alta, Baixa ou Lateral.")
+    predictions: List[DayPrediction] = Field(..., description="Lista de previsões diárias com preço e variação.")
 
 
 class HealthResponse(BaseModel):

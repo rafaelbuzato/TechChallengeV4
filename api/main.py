@@ -11,7 +11,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from api.schemas import PredictRequest, PredictResponse, HealthResponse, MetricsResponse, ModelMetricsResponse
+from api.schemas import PredictRequest, PredictResponse, DayPrediction, HealthResponse, MetricsResponse, ModelMetricsResponse
 from monitoring.middleware import MonitoringMiddleware, get_metrics
 
 MODEL_PATH   = os.path.join(os.path.dirname(__file__), "..", "model", "lstm_model.keras")
@@ -113,9 +113,32 @@ def predict(request: PredictRequest):
     pred_array = np.array(predictions).reshape(-1, 1)
     pred_inv = scaler.inverse_transform(pred_array).flatten().tolist()
 
+    reference_price = round(request.prices[-1], 4)
+
+    day_predictions = []
+    for i, price in enumerate(pred_inv):
+        price = round(price, 4)
+        prev = reference_price if i == 0 else round(pred_inv[i - 1], 4)
+        change_pct = round((price - prev) / prev * 100, 2)
+        direction = "Alta" if change_pct > 0.05 else ("Baixa" if change_pct < -0.05 else "Estável")
+        day_predictions.append(DayPrediction(
+            day=i + 1,
+            label=f"Dia {i + 1}",
+            price=price,
+            change_pct=change_pct,
+            direction=direction,
+        ))
+
+    first_price = round(pred_inv[0], 4)
+    last_price  = round(pred_inv[-1], 4)
+    overall_change = (last_price - reference_price) / reference_price * 100
+    trend = "Alta" if overall_change > 0.1 else ("Baixa" if overall_change < -0.1 else "Lateral")
+
     return PredictResponse(
         ticker=TICKER,
-        predictions=[round(p, 4) for p in pred_inv],
-        days_ahead=request.days_ahead,
         model_version=MODEL_VERSION,
+        days_ahead=request.days_ahead,
+        reference_price=reference_price,
+        trend=trend,
+        predictions=day_predictions,
     )
